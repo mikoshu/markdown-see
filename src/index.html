@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>文档预览</title>
+  <style>
+    .list{
+
+    }
+    .list a{
+      display: inline-block;
+      padding: 5px 15px;
+      margin: 10px;
+      border: 1px solid #000;
+      border-radius: 5px;
+    }
+  </style>
+  <script src="js/jquery.min.js"></script>
+</head>
+<body>
+  <div>
+    <div id="list" class="list">
+
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function(){
+      var name = location.href.split('?')[1]
+      if(name){
+        getList(name)
+      }else{
+        getList()
+      }
+
+      function getList(dir) {
+        var param = ''
+        if (dir) {
+          param = '?' + dir
+        }
+        $.ajax({
+          url: '/getList/' + param,
+          success: function (data) {
+            $("#list").html(data.data)
+            $("#list").find('a').on('click', function () {
+              var url = $(this).attr('data-url')
+              var type = $(this).attr('data-type')
+              if (type == 'file') {
+                window.location.href = 'docs.html?' + url
+              } else {
+                window.location.href = '?'+url
+                getList(url)
+              }
+            })
+          }
+        })
+      }
+      
+    })
+  </script>
+
+</body>
+</html>

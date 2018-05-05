@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="js/jquery.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/run_prettify.js"></script>
+  
+  <style>
+    .container{
+      padding-left: 300px;
+    }
+    .toc{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 300px;
+      height: 100vh;
+      overflow: auto;
+      border-right:1px solid #ccc;
+    }
+    pre code, pre.prettyprint code {
+     padding: 0!important;
+    }
+    pre.prettyprint{
+      padding: 20px;
+      border-radius: 0;
+      border: none;
+      /* background:#3d3e38;
+      color:#f0f0f0; */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="" id="md">
+
+    </div>
+  </div>
+  <script>
+  $(document).ready(function(){
+    var url = location.href.split('?')[1]
+    $.ajax({
+      url: url,
+      success: function(data){
+        console.log(data.data)
+        $("#md").html(data.data)
+        $("#md").find('pre').addClass('prettyprint')
+        $("#md").find('#toc').next().addClass('toc')
+      }
+    })
+  })
+  </script>
+</body>
+</html>
