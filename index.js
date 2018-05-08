@@ -55,11 +55,12 @@ function getList(dir,req,res,next){
       files.forEach(function (filename) {
         //console.log(filename)
         var stats = fs.statSync(path.join(dir, filename));
+        var fileurl = path.join(dir, filename).replace(/\\/g,'/')
         if (stats.isDirectory()) {
-          list += '<a href="javascript:;" data-type="dir" data-url="' + path.join(dir, filename) + '">目录' + filename + '/</a>'
+          list += '<a href="javascript:;" data-type="dir" data-url="' + fileurl + '">目录' + filename + '/</a>'
           //console.log(filename+'/')
         } else {
-          list += '<a href="javascript:;" data-type="file" data-url="' + path.join(dir, filename) + '">文档' + filename + '</a>'
+          list += '<a href="javascript:;" data-type="file" data-url="' + fileurl + '">文档' + filename + '</a>'
           //console.log(filename)
         }
 
@@ -83,8 +84,10 @@ function getList(dir,req,res,next){
 
 app.get('/getList/*',function(req,res,next){
   
-  var url = req.url
-  console.log(url)
+  var url = decodeURIComponent(req.url)
+  //url = encodeURI(encodeURI(url))
+  //console.log('list',url)
+  //console.log(encodeURI(encodeURI(url)))
   if(url.indexOf('?') != -1){
     var directory = url.split('?')[1]
   }else{
@@ -97,11 +100,12 @@ app.get('/getList/*',function(req,res,next){
 })
 
 app.get('/'+dir+'*',function(req,res,next){
-  //console.log(req.url)
-
+  //console.log(decodeURIComponent(req.url))
   
-
-  var url = path.join(process.cwd(),req.url)
+  var url = path.join(process.cwd(), decodeURIComponent(req.url))
+  //console.log(url)
+  //url = encodeURI(encodeURI(url))
+  //console.log('doc',url)
   fs.stat(url, function (err, stats) {
     if(err){
       console.log(err)
@@ -119,6 +123,7 @@ app.get('/'+dir+'*',function(req,res,next){
       })
     }else{
       fs.readFile(url, 'utf8',(err, data) => {
+        
         if (err) throw err;
         //var html = markdown.toHTML(data)
         
